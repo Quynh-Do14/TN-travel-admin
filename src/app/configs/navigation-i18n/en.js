@@ -11,6 +11,7 @@ const locale = {
   CHAT: 'Chat',
   SCRUMBOARD: 'Scrumboard',
   NOTES: 'Notes',
+  TOUR: 'Tours',
 };
 
 export default locale;

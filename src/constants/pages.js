@@ -1,0 +1,13 @@
+export const ROOT_PAGE = "/";
+export const LOGIN = "/login";
+export const SIGNUP = "/signup";
+export const DULIEU = "/duLieu";
+export const BANDO = "/banDo";
+export const DICHVU = "/dichVu";
+export const SHARED = "/shared";
+export const DASHBOARD = "/dashBoard";
+export const PROFILE = "/profile";
+export const ABOUT_PAGE = "/about";
+export const ACCOUNT_PAGE = "/account";
+export const BAN_DO_2D = "/2D";
+export const BODY = "/2D";

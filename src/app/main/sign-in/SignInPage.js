@@ -14,9 +14,10 @@ import AvatarGroup from '@mui/material/AvatarGroup';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import { useEffect } from 'react';
+import {useState, useEffect } from 'react';
 import jwtService from '../../auth/services/jwtService';
-
+import api from 'src/api';
+import { useNavigate } from 'react-router-dom';
 /**
  * Form Validation Schema
  */
@@ -44,25 +45,52 @@ function SignInPage() {
   const { isValid, dirtyFields, errors } = formState;
 
   useEffect(() => {
-    setValue('email', 'admin@fusetheme.com', { shouldDirty: true, shouldValidate: true });
-    setValue('password', 'admin', { shouldDirty: true, shouldValidate: true });
+    setValue('email', email, { shouldDirty: true, shouldValidate: true });
+    setValue('password', password, { shouldDirty: true, shouldValidate: true });
   }, [setValue]);
 
-  function onSubmit({ email, password }) {
-    jwtService
-      .signInWithEmailAndPassword(email, password)
-      .then((user) => {
-        // No need to do anything, user data will be set at app/auth/AuthContext
-      })
-      .catch((_errors) => {
-        _errors.forEach((error) => {
-          setError(error.type, {
-            type: 'manual',
-            message: error.message,
-          });
-        });
-      });
+  const [email, setEmail] = useState("admin@gmail.com");
+  const [password, setPassword] = useState("123456aA")
+  // const router = useRouter()
+  const onChangeEmail = (e) => {
+    setEmail(e.target.value)
   }
+
+  const onChangePassword = (e) => {
+    setPassword(e.target.value)
+  }
+
+
+  // function onSubmit({ email, password }) {
+  //   jwtService
+  //     .signInWithEmailAndPassword(email, password)
+  //     .then((user) => {
+  //       // No need to do anything, user data will be set at app/auth/AuthContext
+  //     })
+  //     .catch((_errors) => {
+  //       _errors.forEach((error) => {
+  //         setError(error.type, {
+  //           type: 'manual',
+  //           message: error.message,
+  //         });
+  //       });
+  //     });
+  // }
+  const navigate = useNavigate();
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const login = await api.login({
+      email: email,
+      password: password,
+    });
+    if (login.success == true) {
+      sessionStorage.setItem("token", login.data.token)
+      navigate('/apps/e-commerce/products');
+    }
+    return false;
+  }
+
 
   return (
     <div className="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-1 min-w-0">
@@ -84,7 +112,7 @@ function SignInPage() {
             name="loginForm"
             noValidate
             className="flex flex-col justify-center w-full mt-32"
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={onSubmit}
           >
             <Controller
               name="email"
@@ -101,6 +129,8 @@ function SignInPage() {
                   variant="outlined"
                   required
                   fullWidth
+                  value={email}
+                  onChange={onChangeEmail}
                 />
               )}
             />
@@ -119,6 +149,8 @@ function SignInPage() {
                   variant="outlined"
                   required
                   fullWidth
+                  value={password}
+                  onChange={onChangePassword}
                 />
               )}
             />

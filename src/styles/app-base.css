@@ -1,4 +1,3 @@
-
 /*@tailwind base;*/
 
 /**
@@ -16,7 +15,7 @@
 }
 
 * :focus {
-     outline: none !important;
+    outline: none !important;
 }
 
 html {
@@ -32,12 +31,14 @@ body {
     font-feature-settings: "salt";
 }
 
-html, body {
+html,
+body {
     -webkit-font-smoothing: auto;
     -moz-osx-font-smoothing: auto;
 }
 
-html, body {
+html,
+body {
     display: flex;
     flex-direction: column;
     position: relative;
@@ -54,32 +55,38 @@ html, body {
     height: 100%;
 }
 
-h1, .h1 {
+h1,
+.h1 {
     font-size: 24px;
 }
 
-h2, .h2 {
+h2,
+.h2 {
     font-size: 20px;
 }
 
-h3, .h3 {
+h3,
+.h3 {
     font-size: 16px;
 }
 
-h4, .h4 {
+h4,
+.h4 {
     font-size: 15px;
 }
 
-h5, .h5 {
+h5,
+.h5 {
     font-size: 13px;
 }
 
-h6, .h6 {
+h6,
+.h6 {
     font-size: 12px;
 }
 
-.ps > .ps__rail-y,
-.ps > .ps__rail-x {
+.ps>.ps__rail-y,
+.ps>.ps__rail-x {
     z-index: 99;
 }
 
@@ -138,8 +145,7 @@ button:focus {
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
-input:-webkit-autofill:active
-{
+input:-webkit-autofill:active {
     transitionDelay: 9999s;
     transitionProperty: background-color, color;
 }
@@ -152,8 +158,30 @@ input:-webkit-autofill:active
 .fc-scrollgrid-section-liquid {
     height: 1px !important;
 }
-.flex.flex-auto.flex-col.container.z-10.h-full.shadow-1.rounded-t-16.relative.overflow-hidden{
+
+.flex.flex-auto.flex-col.container.z-10.h-full.shadow-1.rounded-t-16.relative.overflow-hidden {
     max-width: 1570px;
     width: 90%;
     margin: 0 auto;
+}
+
+button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedWarning.MuiButton-sizeMedium.MuiButton-containedSizeMedium.btn-delete-tbl.css-s1ebek-MuiButtonBase-root-MuiButton-root {
+    background: rgb(211, 47, 47);
+}
+
+button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedSuccess.MuiButton-sizeMedium.MuiButton-containedSizeMedium.btn-view-tbl.css-1lha7y1-MuiButtonBase-root-MuiButton-root {
+    background-color: rgb(46, 125, 50);
+    margin-right: 5px;
+}
+button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedSecondary.MuiButton-sizeMedium.MuiButton-containedSizeMedium.whitespace-nowrap.mx-4.css-224wcd-MuiButtonBase-root-MuiButton-root{
+    background-color: rgb(156, 39, 176);
+}
+
+button.MuiButtonBase-root.MuiButton-root.MuiButton-contained.MuiButton-containedSecondary.MuiButton-sizeLarge.MuiButton-containedSizeLarge.w-full.mt-16.css-r0kiyo-MuiButtonBase-root-MuiButton-root{
+    background-color: #4f46e5;
+}
+
+.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation0.MuiAlert-root.MuiAlert-standardSuccess.MuiAlert-standard.css-ryivbw-MuiPaper-root-MuiAlert-root{
+    position: relative;
+    top: 134px;
 }

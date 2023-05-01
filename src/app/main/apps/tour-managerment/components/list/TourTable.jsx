@@ -15,38 +15,39 @@ import { useDispatch, useSelector } from 'react-redux';
 import withRouter from '@fuse/core/withRouter';
 import FuseLoading from '@fuse/core/FuseLoading';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import { getProducts, selectProducts, selectProductsSearchText } from '../store/productsSlice';
-import ProductsTableHead from './ProductsTableHead';
+import TourTableHead from './TourTableHead';
 import api from 'src/api';
+import { Alert, AlertTitle, Button, Collapse, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Menu, MenuItem } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import { useNavigate } from 'react-router-dom';
+import { ConfigStatusTour } from 'src/app/common/helper';
 
-function ProductsTable(props) {
-  const dispatch = useDispatch();
-  const products = useSelector(selectProducts);
-  const searchText = useSelector(selectProductsSearchText);
-
-  const [loading, setLoading] = useState(true);
+function TourTable(props) {
+  const { dataList, loading, setLoading, GetUserAsync } = props
+  const navigate = useNavigate()
   const [selected, setSelected] = useState([]);
-  const [data, setData] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [openAlert, setOpenAlert] = useState(true);
   const [order, setOrder] = useState({
     direction: 'asc',
     id: null,
   });
+  const [selectedId, setSelectedId] = useState(null)
+  const [isOpenDelete, setIsOpenDelete] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = (anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-  useEffect(() => {
-    dispatch(getProducts()).then(() => setLoading(false));
-  }, [dispatch]);
 
-  const GetUserAsync = async () => {
-    const response = await api.getAllTour()
-    if (response.data.tours.length > 0) {
-      setData(response.data.tours)
-    }
-  }
-  useEffect(() => {
-    GetUserAsync()
-  }, [])
+
 
   function handleRequestSort(event, property) {
     const id = property;
@@ -64,7 +65,7 @@ function ProductsTable(props) {
 
   function handleSelectAllClick(event) {
     if (event.target.checked) {
-      setSelected(data.map((n) => n.id));
+      setSelected(dataList.map((n) => n.id));
       return;
     }
     setSelected([]);
@@ -74,9 +75,6 @@ function ProductsTable(props) {
     setSelected([]);
   }
 
-  function handleClick(item) {
-    props.navigate(`/apps/e-commerce/products/${item.id}/${item.handle}`);
-  }
 
   function handleCheck(event, id) {
     const selectedIndex = selected.indexOf(id);
@@ -114,7 +112,32 @@ function ProductsTable(props) {
     );
   }
 
-  if (data.length === 0) {
+  const handleDetail = (item) => {
+    navigate(`/apps/tour-managerment/${item.idTour}`);
+    setAnchorEl(null);
+  }
+
+  const handleDelete = () => {
+    api.deleteTour({
+      idTour: selectedId,
+    },
+      GetUserAsync(),
+      setLoading(true)
+    )
+    setAnchorEl(null);
+    setIsOpenDelete(false);
+  }
+
+  const handleOpenDelete = (item) => {
+    setIsOpenDelete(true);
+    setSelectedId(item.idTour)
+  };
+
+  const handleCloseDelete = () => {
+    setIsOpenDelete(false);
+  };
+
+  if (dataList.length === 0) {
     return (
       <motion.div
         initial={{ opacity: 0 }}
@@ -131,18 +154,18 @@ function ProductsTable(props) {
     <div className="w-full flex flex-col min-h-full">
       <FuseScrollbars className="grow overflow-x-auto">
         <Table stickyHeader className="min-w-xl" aria-labelledby="tableTitle">
-          <ProductsTableHead
+          <TourTableHead
             selectedProductIds={selected}
             order={order}
             onSelectAllClick={handleSelectAllClick}
             onRequestSort={handleRequestSort}
-            rowCount={data.length}
+            rowCount={dataList.length}
             onMenuItemClick={handleDeselect}
           />
 
           <TableBody>
             {
-              data.map((item, index) => (
+              dataList.map((item, index) => (
                 <TableRow
                   className="h-72 cursor-pointer"
                   hover
@@ -150,8 +173,7 @@ function ProductsTable(props) {
                   role="checkbox"
                   // aria-checked={isSelected}
                   tabIndex={-1}
-                  // selected={isSelected}
-                  onClick={(item) => handleClick(item)}
+                // selected={isSelected}
                 >
                   <TableCell className="w-40 md:w-64 text-center" padding="none">
                     {/* <Checkbox
@@ -161,7 +183,7 @@ function ProductsTable(props) {
                     /> */}
                   </TableCell>
 
-                  <TableCell className="w-90 md:w-150 text-center" padding="none">
+                  <TableCell onClick={() => handleDetail(item)} className="w-90 md:w-150 text-center" padding="none">
                     {item.tenTour}
                   </TableCell>
 
@@ -182,7 +204,7 @@ function ProductsTable(props) {
                   </TableCell>
 
                   <TableCell className="w-50 md:w-150 text-center" padding="none">
-                    {item.status}
+                    {ConfigStatusTour(item.status)}
                   </TableCell>
 
                   <TableCell className="w-50 md:w-150 text-center" padding="none">
@@ -192,6 +214,28 @@ function ProductsTable(props) {
                   <TableCell className="w-50 md:w-150 text-center" padding="none">
                     {item.luotXem}
                   </TableCell>
+
+                  <TableCell className="w-50 md:w-150 text-center" padding="none">
+                    <Button
+                      className='btn-view-tbl'
+                      onClick={() => { handleDetail(item) }}
+                      variant="contained"
+                      color="success"
+                      startIcon={<EditIcon />}
+                    >
+                      Sửa
+                    </Button>
+                    <Button
+                      className='btn-delete-tbl'
+                      onClick={() => { handleOpenDelete(item) }}
+                      variant="contained"
+                      color="warning"
+                      startIcon={<DeleteOutlineIcon />}
+                    >
+                      Xóa
+                    </Button>
+                  </TableCell>
+
                 </TableRow>
               ))
             }
@@ -202,7 +246,7 @@ function ProductsTable(props) {
       <TablePagination
         className="shrink-0 border-t-1"
         component="div"
-        count={data.length}
+        count={dataList.length}
         rowsPerPage={rowsPerPage}
         page={page}
         backIconButtonProps={{
@@ -214,8 +258,31 @@ function ProductsTable(props) {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+
+      <Dialog
+        open={isOpenDelete}
+        onClose={handleOpenDelete}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        fullWidth={true}
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Xóa mục này?"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText style={{ color: "red" }} id="alert-dialog-description">
+            <ErrorOutlineIcon /> Bạn có chắc chắn muốn xóa?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDelete}>Hủy bỏ</Button>
+          <Button onClick={handleDelete} autoFocus>
+            Xóa
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
 
-export default withRouter(ProductsTable);
+export default withRouter(TourTable);

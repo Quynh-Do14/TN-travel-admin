@@ -49,8 +49,7 @@ const navigationConfig = [
     title: 'Quản lý Tour',
     type: 'item',
     icon: 'heroicons-outline:cloud',
-    url: '/apps/file-manager',
-    end: true,
+    url: 'apps/tour-managerment',
   },
   {
     id: 'apps.mailbox',

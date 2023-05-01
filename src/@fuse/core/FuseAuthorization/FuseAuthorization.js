@@ -55,6 +55,13 @@ class FuseAuthorization extends Component {
         User is guest
         Redirect to Login Page
         */
+    // const isLogin = sessionStorage.getItem('token')
+    // useEffect(() => {
+    //   if (!isLogin) {
+    //     history.push("/Login")
+    //   }
+    // }, [])
+
     if (!userRole || userRole.length === 0) {
       setTimeout(() => history.push('/sign-in'), 0);
       loginRedirectUrl = pathname;
